@@ -1,2 +1,1 @@
-# dev-store
 # devstore
