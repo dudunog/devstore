@@ -7,14 +7,14 @@ import Link from 'next/link'
  * Cache & Memoization
  */
 
-export async function getFeaturedProducts(): Promise<Product[]> {
+async function getFeaturedProducts(): Promise<Product[]> {
   const response = await api('/products/featured', {
     next: {
       revalidate: 60 * 60, // 1 hour
     },
   })
 
-  const products = response.json()
+  const products = await response.json()
 
   return products
 }
