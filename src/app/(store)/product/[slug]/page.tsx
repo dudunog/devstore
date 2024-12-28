@@ -9,7 +9,7 @@ interface ProductProps {
   }
 }
 
-export async function getProduct(slug: string): Promise<Product> {
+async function getProduct(slug: string): Promise<Product> {
   const response = await api(`/products/${slug}`, {
     next: {
       revalidate: 60 * 60, // 1 hour
@@ -29,6 +29,21 @@ export async function generateMetadata({
   return {
     title: product.title,
   }
+}
+
+export async function generateStaticParams() {
+  const response = await api('/products/featured')
+  const products: Product[] = await response.json()
+
+  // return [
+  //   {
+  //     slug: 'moletom-never-stop-learning',
+  //   },
+  // ]
+
+  return products.map((product) => {
+    return { slug: product.slug }
+  })
 }
 
 export default async function ProductPage({ params }: ProductProps) {
