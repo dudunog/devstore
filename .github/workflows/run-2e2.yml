@@ -25,8 +25,8 @@ jobs:
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -35,6 +35,17 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Install Cypress
+        run: pnpm add --save-dev cypress
+
+      - name: Setup Cypress binary cache
+        uses: actions/cache@v3
+        with:
+          path: home/runner/.cache/cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
